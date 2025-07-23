@@ -2,9 +2,12 @@
   "name": "VOIS-Upscaling-Node",
   "version": "1.0.0",
   "description": "VOIS Upscaling Node",
-  "main": "index.js",
+  "main": "src/app.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsx --env-file=.env --watch src/app.ts",
+    "build": "tsc --outDir dist",
+    "start": "node dist/src/app.js",
+    "clean": "rm -rf dist && rm -rf node_modules"
   },
   "keywords": [
     "VOIS",
@@ -13,11 +16,18 @@
     "express",
     "mongoose"
   ],
-  "author": "VOIS",
+  "author": "Sherif Ahmed <sherif.abdalhakam@vodafone.com>",
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "express": "^5.1.0",
     "mongoose": "^8.16.4",
     "zod": "^4.0.5"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.1.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
   }
 }
