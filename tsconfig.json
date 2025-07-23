@@ -10,16 +10,15 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
     "declaration": true,
     "outDir": "./dist",
     "rootDir": "./",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"],
+      "@/*": ["src/*"],
       "@/models/*": ["src/models/*"],
       "@/utils/*": ["src/shared/utils/*"],
-      "@/constants/*": ["src/constants/*"],
+      "@/constants/*": ["src/constants/*"]
     }
   },
   "include": [
