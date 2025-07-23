@@ -1,6 +1,6 @@
 import { z } from "zod";
 import mongoose from "mongoose";
-import { VALIDATION_MESSAGES, VALIDATION_NUMBERS } from "@/constants";
+import { VALIDATION_MESSAGES, VALIDATION_NUMBERS } from "@/src/constants";
 
 export const blogValidator = z.object({
   title: z

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { VALIDATION_MESSAGES, VALIDATION_NUMBERS } from "@/constants";
+import { VALIDATION_MESSAGES, VALIDATION_NUMBERS } from "@/src/constants";
 
 export const categoryValidator = z.object({
   name: z

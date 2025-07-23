@@ -1,4 +1,4 @@
-import { VALIDATION_MESSAGES, VALIDATION_NUMBERS } from "@/constants";
+import { VALIDATION_MESSAGES, VALIDATION_NUMBERS } from "@/src/constants";
 import { z } from "zod";
 
 export const userValidator = z.object({

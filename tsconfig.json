@@ -17,9 +17,9 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
-      "@/models/*": ["./models/*"],
-      "@/utils/*": ["shared/utils/*"],
-      "@/constants/*": ["./constants/*"],
+      "@/models/*": ["src/models/*"],
+      "@/utils/*": ["src/shared/utils/*"],
+      "@/constants/*": ["src/constants/*"],
     }
   },
   "include": [

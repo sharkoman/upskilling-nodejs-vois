@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { VALIDATION_MESSAGES, VALIDATION_NUMBERS } from "@/constants";
+import { VALIDATION_MESSAGES, VALIDATION_NUMBERS } from "@/src/constants";
 import { TCategory } from "./category.interface";
 
 const categorySchema = new mongoose.Schema<TCategory>(
