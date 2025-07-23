@@ -1,10 +1,15 @@
 import express from "express";
-
-const app = express();
+import categoryRoute from "./routes/category.route";
+import blogRoute from "./routes/blog.route";
 
 const PORT = process.env.PORT || 3000;
 
-app.get("/", (req, res) => {
+const app = express();
+
+app.use("/categories", categoryRoute);
+app.use("/blogs", blogRoute);
+
+app.get("/", (_req, res) => {
   res.send("Hello World");
 });
 
