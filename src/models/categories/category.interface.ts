@@ -1,4 +1,4 @@
 import { z } from "zod";
-import { categoryValidator } from "./category.validator";
+import { categoryValidatorSchema } from "./category.validator";
 
-export type TCategory = z.infer<typeof categoryValidator>;
+export type TCategory = z.infer<typeof categoryValidatorSchema>;

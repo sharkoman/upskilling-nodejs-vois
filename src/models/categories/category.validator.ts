@@ -1,7 +1,9 @@
 import { z } from "zod";
 import { VALIDATION_MESSAGES, VALIDATION_NUMBERS } from "@/constants";
+import { validateRequestBody } from "@/utils/validate-request-body.util";
+import { TCategory } from "./category.interface";
 
-export const categoryValidator = z.object({
+export const categoryValidatorSchema = z.object({
   name: z
     .string()
     .min(VALIDATION_NUMBERS.MIN_NAME_LENGTH, {
@@ -13,5 +15,5 @@ export const categoryValidator = z.object({
 });
 
 export const validateCategory = (category: unknown) => {
-  return categoryValidator.safeParse(category);
+  return validateRequestBody<TCategory>(categoryValidatorSchema, category);
 };

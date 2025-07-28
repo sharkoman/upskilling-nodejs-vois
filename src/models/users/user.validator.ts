@@ -1,7 +1,9 @@
 import { z } from "zod";
 import { VALIDATION_MESSAGES, VALIDATION_NUMBERS } from "@/constants";
+import { validateRequestBody } from "@/utils/validate-request-body.util";
+import { TUser } from "./user.interface";
 
-export const userValidator = z.object({
+export const userValidatorSchema = z.object({
   name: z
     .string()
     .min(VALIDATION_NUMBERS.MIN_NAME_LENGTH, {
@@ -19,5 +21,5 @@ export const userValidator = z.object({
 });
 
 export const validateUser = (user: unknown) => {
-  return userValidator.safeParse(user);
+  return validateRequestBody<TUser>(userValidatorSchema, user);
 };

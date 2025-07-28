@@ -1,4 +1,4 @@
-import { VALIDATION_MESSAGES } from "@/constants/validation-messages";
+import { VALIDATION_MESSAGES } from "@/constants/validation-messages.const";
 import { ExpressErrorHandler } from "@/interfaces/express-handler.interface";
 
 export const errorMiddleware: ExpressErrorHandler = (err, _req, res, _next) => {

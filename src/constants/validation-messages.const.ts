@@ -1,4 +1,4 @@
-import { VALIDATION_NUMBERS } from "./validation-numbers";
+import { VALIDATION_NUMBERS } from "./validation-numbers.const";
 
 export const VALIDATION_MESSAGES = {
   MIN_NAME_LENGTH: `Name must be at least ${VALIDATION_NUMBERS.MIN_NAME_LENGTH} characters long`,
@@ -10,4 +10,5 @@ export const VALIDATION_MESSAGES = {
   MIN_CONTENT_LENGTH: `Content must be at least ${VALIDATION_NUMBERS.MIN_CONTENT_LENGTH} characters long`,
   INVALID_OBJECT_ID: "Invalid ID",
   INTERNAL_SERVER_ERROR: "Internal Server Error",
+  ITEM_ALREADY_EXISTS: "Item already exists",
 };

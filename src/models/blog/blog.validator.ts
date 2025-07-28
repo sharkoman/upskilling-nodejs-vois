@@ -1,8 +1,10 @@
 import { z } from "zod";
 import mongoose from "mongoose";
 import { VALIDATION_MESSAGES, VALIDATION_NUMBERS } from "@/constants";
+import { validateRequestBody } from "@/utils/validate-request-body.util";
+import { TBlog } from "./blog.interface";
 
-export const blogValidator = z.object({
+export const blogValidatorSchema = z.object({
   title: z
     .string()
     .min(VALIDATION_NUMBERS.MIN_NAME_LENGTH, {
@@ -25,5 +27,5 @@ export const blogValidator = z.object({
 });
 
 export const validateBlog = (blog: unknown) => {
-  return blogValidator.safeParse(blog);
+  return validateRequestBody<TBlog>(blogValidatorSchema, blog);
 };

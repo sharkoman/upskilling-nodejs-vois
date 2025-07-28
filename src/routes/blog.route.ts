@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { asyncRoute } from "@/utils/asyncRoute.util";
+import { asyncRoute } from "@/utils/async-route.util";
 
 const router = Router();
 
