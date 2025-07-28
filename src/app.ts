@@ -13,13 +13,13 @@ if (!MONGO_URI) {
   process.exit(1);
 }
 
-// connect with database
+// Connect to database
 initDb(MONGO_URI);
 
-// init routes & middlewares
+// Initialize routes and middlewares
 initAppRoutes(app);
 
-// start server
+// Start Server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

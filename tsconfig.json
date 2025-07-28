@@ -18,7 +18,8 @@
       "@/*": ["src/*"],
       "@/models/*": ["src/models/*"],
       "@/utils/*": ["src/shared/utils/*"],
-      "@/constants/*": ["src/constants/*"]
+      "@/constants/*": ["src/constants/*"],
+      "@/middlewares/*": ["src/middlewares/*"]
     }
   },
   "include": [
