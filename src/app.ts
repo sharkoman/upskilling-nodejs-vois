@@ -4,10 +4,11 @@ import { initDb } from "./startup/db.startup";
 
 const app = express();
 
-// init env
+// Init env
 const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI;
 
+// Check if MONGO_URI is defined
 if (!MONGO_URI) {
   console.error("MONGO_URI is not defined");
   process.exit(1);

@@ -19,7 +19,8 @@
       "@/models/*": ["src/models/*"],
       "@/utils/*": ["src/shared/utils/*"],
       "@/constants/*": ["src/constants/*"],
-      "@/middlewares/*": ["src/middlewares/*"]
+      "@/middlewares/*": ["src/middlewares/*"],
+      "@/interfaces/*": ["src/shared/interfaces/*"]
     }
   },
   "include": [

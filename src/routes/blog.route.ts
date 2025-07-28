@@ -1,25 +1,26 @@
 import { Router } from "express";
+import { asyncRoute } from "@/utils/asyncRoute.util";
 
 const router = Router();
 
-router.get("/", (_req, res) => {
+router.get("/", asyncRoute(async (_req, res) => {
   res.send("Blogs...");
-});
+}));
 
-router.get("/:id", (req, res) => {
+router.get("/:id", asyncRoute(async (req, res) => {
   res.send("Blog by id...");
-});
+}));
 
-router.post("/", (req, res) => {
+router.post("/", asyncRoute(async (req, res) => {
   res.send("Create Blog...");
-});
+}));
 
-router.put("/:id", (req, res) => {
+router.put("/:id", asyncRoute(async (req, res) => {
   res.send("Update Blog...");
-});
+}));
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", asyncRoute(async (req, res) => {
   res.send("Delete Blog...");
-});
+}));
 
 export default router;

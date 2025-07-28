@@ -9,4 +9,5 @@ export const VALIDATION_MESSAGES = {
   MAX_CATEGORY_NAME_LENGTH: `Category name must be less than ${VALIDATION_NUMBERS.MAX_CATEGORY_NAME_LENGTH} characters long`,
   MIN_CONTENT_LENGTH: `Content must be at least ${VALIDATION_NUMBERS.MIN_CONTENT_LENGTH} characters long`,
   INVALID_OBJECT_ID: "Invalid ID",
+  INTERNAL_SERVER_ERROR: "Internal Server Error",
 };
