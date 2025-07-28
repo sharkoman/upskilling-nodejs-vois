@@ -1,18 +1,25 @@
 import express from "express";
-import categoryRoute from "./routes/category.route";
-import blogRoute from "./routes/blog.route";
-
-const PORT = process.env.PORT || 3000;
+import { initAppRoutes } from "./startup/routes.startup";
+import { initDb } from "./startup/db.startup";
 
 const app = express();
 
-app.use("/categories", categoryRoute);
-app.use("/blogs", blogRoute);
+// init env
+const PORT = process.env.PORT || 3000;
+const MONGO_URI = process.env.MONGO_URI;
 
-app.get("/", (_req, res) => {
-  res.send("Hello World");
-});
+if (!MONGO_URI) {
+  console.error("MONGO_URI is not defined");
+  process.exit(1);
+}
 
+// connect with database
+initDb(MONGO_URI);
+
+// init routes & middlewares
+initAppRoutes(app);
+
+// start server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

@@ -21,6 +21,7 @@ const categorySchema = new mongoose.Schema<TCategory>(
   },
   {
     timestamps: true,
+    versionKey: false,
   }
 );
 
