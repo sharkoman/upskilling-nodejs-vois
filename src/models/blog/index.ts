@@ -1,3 +1,3 @@
-export * from "./blog.model";
+export { default as Blog } from "./blog.model";
 export * from "./blog.validator";
-export * from "./blog.interface";
+export type { TBlog } from "./blog.interface";
