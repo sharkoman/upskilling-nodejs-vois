@@ -13,6 +13,6 @@ export const VALIDATION_MESSAGES = {
   ITEM_ALREADY_EXISTS: "Item already exists",
   USER_ALREADY_EXISTS: "User already exists, please login",
   ITEM_NOT_FOUND: "Item not found",
-  INVALID_PASSWORD: "Invalid password",
+  INVALID_PASSWORD: "Invalid password, must be at least 8 characters long and contain letters and numbers",
   USER_OR_PASSWORD_INVALID: "User or password invalid",
 } as const;

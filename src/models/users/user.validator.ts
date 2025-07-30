@@ -2,6 +2,7 @@ import { z } from "zod";
 import { VALIDATION_MESSAGES, VALIDATION_NUMBERS } from "@/constants";
 import { validateRequestBody } from "@/utils/validate-request-body.util";
 import { TUser, TUpdateUser } from "./user.interface";
+import { passwordValidator } from "@/shared/utils";
 
 export const userValidatorSchema = z.object({
   name: z
@@ -15,9 +16,11 @@ export const userValidatorSchema = z.object({
   email: z.email({
     message: VALIDATION_MESSAGES.INVALID_EMAIL_ADDRESS,
   }),
-  password: z.string().min(VALIDATION_NUMBERS.MIN_PASSWORD_LENGTH, {
-    message: VALIDATION_MESSAGES.MIN_PASSWORD_LENGTH,
-  }),
+  password: z
+    .string()
+    .refine(passwordValidator, {
+      message: VALIDATION_MESSAGES.INVALID_PASSWORD,
+    }),
 });
 
 export const updateUserValidatorSchema = userValidatorSchema.pick({

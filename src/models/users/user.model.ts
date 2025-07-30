@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { TUser } from "./user.interface";
 import { VALIDATION_MESSAGES, VALIDATION_NUMBERS } from "@/constants";
-import { emailValidator } from "@/shared/utils";
+import { emailValidator, passwordValidator } from "@/shared/utils";
 
 const userSchema = new mongoose.Schema<TUser>(
   {
@@ -31,10 +31,10 @@ const userSchema = new mongoose.Schema<TUser>(
     },
     password: {
       type: String,
-      minlength: [
-        VALIDATION_NUMBERS.MIN_PASSWORD_LENGTH,
-        VALIDATION_MESSAGES.MIN_PASSWORD_LENGTH,
-      ],
+      validate: {
+        validator: passwordValidator,
+        message: VALIDATION_MESSAGES.INVALID_PASSWORD,
+      },
       required: true,
     },
   },
