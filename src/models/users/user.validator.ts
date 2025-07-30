@@ -2,7 +2,7 @@ import { z } from "zod";
 import { VALIDATION_MESSAGES, VALIDATION_NUMBERS } from "@/constants";
 import { validateRequestBody } from "@/utils/validate-request-body.util";
 import { TUser, TUpdateUser } from "./user.interface";
-import { passwordValidator } from "@/shared/utils";
+import { passwordValidator } from "@/utils";
 
 export const userValidatorSchema = z.object({
   name: z

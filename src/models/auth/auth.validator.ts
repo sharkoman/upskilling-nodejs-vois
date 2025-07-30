@@ -1,4 +1,4 @@
-import { validateRequestBody } from "@/shared/utils";
+import { validateRequestBody } from "@/utils";
 import { TAuthLogin } from "./auth.interface";
 import { loginUserValidatorSchema } from "../users/user.validator";
 

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { TUser } from "./user.interface";
 import { VALIDATION_MESSAGES, VALIDATION_NUMBERS } from "@/constants";
-import { emailValidator, passwordValidator } from "@/shared/utils";
+import { emailValidator, passwordValidator } from "@/utils";
 
 const userSchema = new mongoose.Schema<TUser>(
   {

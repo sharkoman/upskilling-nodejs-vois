@@ -17,6 +17,7 @@
     "paths": {
       "@/*": ["src/*"],
       "@/models/*": ["src/models/*"],
+      "@/utils": ["src/shared/utils"],
       "@/utils/*": ["src/shared/utils/*"],
       "@/constants/*": ["src/constants/*"],
       "@/middlewares/*": ["src/middlewares/*"],

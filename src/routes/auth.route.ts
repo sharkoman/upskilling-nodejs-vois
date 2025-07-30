@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { RESPONSE_STATUS, VALIDATION_MESSAGES } from "@/constants";
-import { asyncRoute } from "@/shared/utils";
+import { asyncRoute } from "@/utils";
 import { compare, genSalt, hash } from "bcrypt-ts";
 import { User, validateUser } from "@/models/users";
 import { validateAuthLogin, IAuthLoginResponse } from "@/models/auth";
