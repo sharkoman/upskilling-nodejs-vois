@@ -1,4 +1,4 @@
 import { z } from "zod";
-import { authValidatorSchema } from "./auth.validator";
+import { loginUserValidatorSchema } from "../users/user.validator";
 
-export type TAuth = z.infer<typeof authValidatorSchema>;
+export type TAuthLogin = z.infer<typeof loginUserValidatorSchema>;

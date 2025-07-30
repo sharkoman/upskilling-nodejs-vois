@@ -22,11 +22,13 @@
   "dependencies": {
     "bcrypt-ts": "^7.1.0",
     "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.16.4",
     "zod": "^4.0.5"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.1.0",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"

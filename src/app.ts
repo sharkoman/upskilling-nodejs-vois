@@ -7,6 +7,12 @@ const app = express();
 // Init env
 const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI;
+const JWT_SECRET = process.env.JWT_SECRET;
+
+if (!JWT_SECRET) {
+  console.error("JWT_SECRET is not defined");
+  process.exit(1);
+}
 
 // Check if MONGO_URI is defined
 if (!MONGO_URI) {

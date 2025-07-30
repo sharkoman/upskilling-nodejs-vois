@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { VALIDATION_MESSAGES, VALIDATION_NUMBERS } from "@/constants";
 import { validateRequestBody } from "@/utils/validate-request-body.util";
-import { TUser } from "./user.interface";
+import { TUser, TUpdateUser } from "./user.interface";
 
 export const userValidatorSchema = z.object({
   name: z
@@ -20,6 +20,19 @@ export const userValidatorSchema = z.object({
   }),
 });
 
-export const validateUser = (user: unknown) => {
-  return validateRequestBody<TUser>(userValidatorSchema, user);
+export const updateUserValidatorSchema = userValidatorSchema.pick({
+  name: true,
+});
+
+export const loginUserValidatorSchema = userValidatorSchema.pick({
+  email: true,
+  password: true,
+});
+
+export const validateUser = (requestBody: unknown) => {
+  return validateRequestBody<TUser>(userValidatorSchema, requestBody);
+};
+
+export const validateUpdateUser = (requestBody: unknown) => {
+  return validateRequestBody<TUpdateUser>(updateUserValidatorSchema, requestBody);
 };

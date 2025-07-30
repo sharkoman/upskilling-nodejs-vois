@@ -1,13 +1,7 @@
-import { z } from "zod";
 import { validateRequestBody } from "@/shared/utils";
-import { TAuth } from "./auth.interface";
-import { VALIDATION_NUMBERS } from "@/constants";
+import { TAuthLogin } from "./auth.interface";
+import { loginUserValidatorSchema } from "../users/user.validator";
 
-export const authValidatorSchema = z.object({
-  email: z.email(),
-  password: z.string(),
-});
-
-export const validateAuth = (auth: unknown) => {
-  return validateRequestBody<TAuth>(authValidatorSchema, auth);
+export const validateAuthLogin = (auth: unknown) => {
+  return validateRequestBody<TAuthLogin>(loginUserValidatorSchema, auth);
 };
