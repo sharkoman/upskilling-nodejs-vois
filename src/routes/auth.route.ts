@@ -3,7 +3,7 @@ import { RESPONSE_STATUS, VALIDATION_MESSAGES } from "@/constants";
 import { asyncRoute } from "@/shared/utils";
 import { compare } from "bcrypt-ts";
 import { User } from "@/models/users";
-import { validateAuthLogin } from "@/models/auth";
+import { validateAuthLogin, IAuthLoginResponse } from "@/models/auth";
 import jwt from "jsonwebtoken";
 
 const router = Router();
@@ -45,7 +45,7 @@ router.get(
 
     const token = jwt.sign(userPayload, process.env.JWT_SECRET!);
 
-    const payload = {
+    const payload: IAuthLoginResponse = {
       user: userPayload,
       token,
     };
