@@ -11,6 +11,7 @@ export const VALIDATION_MESSAGES = {
   INVALID_OBJECT_ID: "Invalid ID",
   INTERNAL_SERVER_ERROR: "Internal Server Error",
   ITEM_ALREADY_EXISTS: "Item already exists",
+  USER_ALREADY_EXISTS: "User already exists, please login",
   ITEM_NOT_FOUND: "Item not found",
   INVALID_PASSWORD: "Invalid password",
   USER_OR_PASSWORD_INVALID: "User or password invalid",

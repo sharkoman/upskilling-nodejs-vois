@@ -69,7 +69,7 @@ router.post(
 
     if (isUserExists) {
       return res.status(RESPONSE_STATUS.BAD_REQUEST).json({
-        message: VALIDATION_MESSAGES.ITEM_ALREADY_EXISTS,
+        message: VALIDATION_MESSAGES.USER_ALREADY_EXISTS,
       });
     }
 
