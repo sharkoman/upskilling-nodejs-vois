@@ -1,15 +1,10 @@
 import jwt from "jsonwebtoken";
 import { VALIDATION_MESSAGES, RESPONSE_STATUS } from "@/constants";
-import { NextFunction, Request, Response } from "express";
-
-interface IRequest extends Request {
-  user?: {
-    _id: string;
-  };
-}
+import { NextFunction, Response } from "express";
+import { IAuthenticatedRequest } from "@/interfaces";
 
 export const authMiddleware = (
-  req: IRequest,
+  req: IAuthenticatedRequest,
   res: Response,
   next: NextFunction
 ) => {
