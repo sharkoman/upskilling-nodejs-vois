@@ -1,16 +1,14 @@
 import { z } from "zod";
 import { blogValidatorSchema } from "./blog.validator";
+import { TUser } from "../users";
+import { ItemWithID, Payload } from "@/interfaces";
+import { TCategory } from "../categories";
 
 export type TBlog = z.infer<typeof blogValidatorSchema>;
 
-export type TBlogPayload = {
-  id: string;
+export type TBlogPayload = Payload<{
   title: string;
   content: string;
-  category: string;
-  owner: {
-    id: string;
-    name: string;
-    email: string;
-  };
-};
+  category: ItemWithID<TCategory>;
+  owner: ItemWithID<Omit<TUser, "password">>;
+}>;
