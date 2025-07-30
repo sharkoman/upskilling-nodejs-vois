@@ -1,14 +1,15 @@
 import { Router } from "express";
 import { asyncRoute } from "@/utils";
 import { RESPONSE_STATUS, VALIDATION_MESSAGES } from "@/constants";
-import { validateCategory, Category } from "@/models/categories";
+import { validateCategory, Category, TCategoryPayload } from "@/models/categories";
+import { Document } from "mongoose";
 
 const router = Router();
 
 router.get("/", asyncRoute(async (_req, res) => {
-  const categories = await Category.find();
+  const categories = await Category.find<Document<TCategoryPayload>>();
 
-  const data = categories.map((category) => {
+  const data: TCategoryPayload[] = categories.map((category) => {
     return category.toObject();
   });
 

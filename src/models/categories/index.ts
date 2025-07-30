@@ -1,3 +1,3 @@
 export { default as Category } from "./category.model";
 export * from "./category.validator";
-export type { TCategory } from "./category.interface";
+export type * from "./category.interface";
