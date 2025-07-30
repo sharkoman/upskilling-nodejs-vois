@@ -15,4 +15,6 @@ export const VALIDATION_MESSAGES = {
   ITEM_NOT_FOUND: "Item not found",
   INVALID_PASSWORD: "Invalid password, must be at least 8 characters long and contain letters and numbers",
   USER_OR_PASSWORD_INVALID: "User or password invalid",
+  UNAUTHORIZED: "Unauthorized",
+  FORBIDDEN_BLOG_ACCESS: "You can only edit or delete your own blogs",
 } as const;

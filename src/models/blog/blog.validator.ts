@@ -21,9 +21,6 @@ export const blogValidatorSchema = z.object({
     .refine((value) => mongoose.Types.ObjectId.isValid(value), {
       message: VALIDATION_MESSAGES.INVALID_OBJECT_ID,
     }),
-  owner: z.string().refine((value) => mongoose.Types.ObjectId.isValid(value), {
-    message: VALIDATION_MESSAGES.INVALID_OBJECT_ID,
-  }),
 });
 
 export const validateBlog = (blog: unknown) => {

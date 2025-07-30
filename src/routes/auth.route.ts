@@ -4,7 +4,6 @@ import { asyncRoute } from "@/utils";
 import { compare, genSalt, hash } from "bcrypt-ts";
 import { User, validateUser } from "@/models/users";
 import { validateAuthLogin, IAuthLoginResponse } from "@/models/auth";
-import jwt from "jsonwebtoken";
 
 const router = Router();
 
@@ -43,7 +42,7 @@ router.get(
       name,
     };
 
-    const token = jwt.sign(userPayload, process.env.JWT_SECRET!);
+    const token = user.generateAuthToken();
 
     const payload: IAuthLoginResponse = {
       user: userPayload,
@@ -90,7 +89,7 @@ router.post(
       email,
     };
 
-    const token = jwt.sign(userPayload, process.env.JWT_SECRET!);
+    const token = user.generateAuthToken();
 
     const payload: IAuthLoginResponse = {
       user: userPayload,

@@ -6,6 +6,10 @@ import { TCategory } from "../categories";
 
 export type TBlog = z.infer<typeof blogValidatorSchema>;
 
+export type TBlogRequestBody = TBlog & {
+  owner: string;
+};
+
 export type TBlogPayload = Payload<{
   title: string;
   content: string;

@@ -1,17 +1,22 @@
-import { Router } from "express";
+import { Router, Request } from "express";
 import { asyncRoute } from "@/utils";
-import { TBlogPayload, validateBlog, Blog } from "@/models/blog";
+import {
+  TBlogPayload,
+  validateBlog,
+  Blog,
+  TBlogRequestBody,
+} from "@/models/blog";
 import { RESPONSE_STATUS, VALIDATION_MESSAGES } from "@/constants";
-import { IPaginatedResponse } from "@/interfaces";
+import { IPaginatedResponse, IAuthenticatedRequest } from "@/interfaces";
 import { Document } from "mongoose";
+import { authMiddleware, blogOwnershipMiddleware } from "@/middlewares";
 
 const router = Router();
 
 router.get(
   "/",
+  [authMiddleware],
   asyncRoute(async (req, res) => {
-    // Get all blogs paginated with same structure as IPaginatedResponse,
-    // the route should be /blogs?page=1&limit=10 with default page and limit of 10
     const { page = 1, limit = 10 } = req.query;
     const pageNumber = Number(page);
     const limitNumber = Number(limit);
@@ -41,6 +46,7 @@ router.get(
 
 router.get(
   "/:id",
+  [authMiddleware],
   asyncRoute(async (req, res) => {
     res.send("Blog by id...");
   })
@@ -48,7 +54,8 @@ router.get(
 
 router.post(
   "/",
-  asyncRoute(async (req, res) => {
+  [authMiddleware],
+  asyncRoute(async (req: IAuthenticatedRequest, res) => {
     const { error, success, data } = validateBlog(req.body);
 
     if (!success) {
@@ -65,7 +72,14 @@ router.post(
       });
     }
 
-    const blog = await Blog.create(data);
+    const blogData: TBlogRequestBody = {
+      ...data!,
+      owner: req.user?._id as string,
+    };
+
+    console.log({ blogData });
+
+    const blog = await Blog.create(blogData);
 
     res.status(RESPONSE_STATUS.CREATED).json(blog);
   })
@@ -73,15 +87,45 @@ router.post(
 
 router.put(
   "/:id",
-  asyncRoute(async (req, res) => {
-    res.send("Update Blog...");
+  [authMiddleware, blogOwnershipMiddleware],
+  asyncRoute(async (req: IAuthenticatedRequest, res) => {
+    const { error, success, data } = validateBlog(req.body);
+
+    if (!success) {
+      return res.status(RESPONSE_STATUS.BAD_REQUEST).json({
+        errors: error,
+      });
+    }
+
+    const blog = await Blog.findByIdAndUpdate(req.params.id, data!, {
+      new: true,
+    });
+
+    if (!blog) {
+      return res.status(RESPONSE_STATUS.NOT_FOUND).json({
+        message: VALIDATION_MESSAGES.ITEM_NOT_FOUND,
+      });
+    }
+
+    res.status(RESPONSE_STATUS.SUCCESS).json(blog.toObject());
   })
 );
 
 router.delete(
   "/:id",
-  asyncRoute(async (req, res) => {
-    res.send("Delete Blog...");
+  [authMiddleware, blogOwnershipMiddleware],
+  asyncRoute(async (req: IAuthenticatedRequest, res) => {
+    const blog = await Blog.findByIdAndDelete(req.params.id);
+
+    console.log({ blog: blog?.toObject() });
+
+    if (!blog) {
+      return res.status(RESPONSE_STATUS.NOT_FOUND).json({
+        message: VALIDATION_MESSAGES.ITEM_NOT_FOUND,
+      });
+    }
+
+    res.status(RESPONSE_STATUS.SUCCESS).json(blog.toObject());
   })
 );
 

@@ -3,10 +3,11 @@ import { asyncRoute } from "@/utils";
 import { RESPONSE_STATUS, VALIDATION_MESSAGES } from "@/constants";
 import { validateCategory, Category, TCategoryPayload } from "@/models/categories";
 import { Document } from "mongoose";
+import { authMiddleware } from "@/middlewares";
 
 const router = Router();
 
-router.get("/", asyncRoute(async (_req, res) => {
+router.get("/", [authMiddleware], asyncRoute(async (_req, res) => {
   const categories = await Category.find<Document<TCategoryPayload>>();
 
   const data: TCategoryPayload[] = categories.map((category) => {
@@ -16,7 +17,7 @@ router.get("/", asyncRoute(async (_req, res) => {
   res.send(data);
 }));
 
-router.post("/", asyncRoute(async (req, res) => {
+router.post("/", [authMiddleware], asyncRoute(async (req, res) => {
     const { error, success, data } = validateCategory(req.body);
 
     if (!success) {

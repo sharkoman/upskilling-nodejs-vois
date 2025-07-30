@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
-import { TUser } from "./user.interface";
+import { IUserDocument } from "./user.interface";
 import { VALIDATION_MESSAGES, VALIDATION_NUMBERS } from "@/constants";
 import { emailValidator, passwordValidator } from "@/utils";
+import jwt from "jsonwebtoken";
 
-const userSchema = new mongoose.Schema<TUser>(
+const userSchema = new mongoose.Schema<IUserDocument>(
   {
     name: {
       type: String,
@@ -41,9 +42,14 @@ const userSchema = new mongoose.Schema<TUser>(
   {
     timestamps: true,
     versionKey: false,
+    methods: {
+      generateAuthToken: function () {
+        return jwt.sign({ _id: this._id }, process.env.JWT_SECRET as string);
+      },
+    },
   }
 );
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model<IUserDocument>("User", userSchema);
 
 export default User;

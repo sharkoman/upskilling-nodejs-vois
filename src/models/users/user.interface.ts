@@ -6,3 +6,6 @@ export type TUser = z.infer<typeof userValidatorSchema>;
 export type TLoginUser = Omit<TUser, "name">;
 export type TUpdateUser = z.infer<typeof updateUserValidatorSchema>;
 export type TUserPayload = Payload<TUser>;
+export interface IUserDocument extends TUser {
+  generateAuthToken(): string;
+}

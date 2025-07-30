@@ -3,7 +3,7 @@ import categoryRoute from "../routes/category.route";
 import blogRoute from "../routes/blog.route";
 import userRoute from "../routes/user.route";
 import authRoute from "../routes/auth.route";
-import { errorMiddleware } from "@/middlewares/error.middleware";
+import { errorMiddleware } from "@/middlewares";
 
 export const initAppRoutes = (app: Express) => {
   app.use(express.json());

@@ -12,3 +12,9 @@ export type ExpressErrorHandler = (
   res: Response,
   next: NextFunction
 ) => void;
+
+export interface IAuthenticatedRequest extends Request {
+  user?: {
+    _id: string;
+  };
+}
