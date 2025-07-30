@@ -1,7 +1,7 @@
 import { z } from "zod";
 import mongoose from "mongoose";
 import { VALIDATION_MESSAGES, VALIDATION_NUMBERS } from "@/constants";
-import { validateRequestBody } from "@/utils/validate-request-body.util";
+import { validateRequestBody } from "@/utils";
 import { TBlog } from "./blog.interface";
 
 export const blogValidatorSchema = z.object({

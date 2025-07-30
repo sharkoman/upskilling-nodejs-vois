@@ -7,5 +7,5 @@ export type TAuthLogin = z.infer<typeof loginUserValidatorSchema>;
 
 export type IAuthLoginResponse = {
   token: string;
-  user: { id: Types.ObjectId } & Omit<TUser, "password">;
+  user: { _id: Types.ObjectId } & Omit<TUser, "password">;
 };

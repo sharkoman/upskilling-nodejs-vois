@@ -38,7 +38,7 @@ router.get(
     const { name, email, _id } = user.toObject();
 
     const userPayload = {
-      id: _id,
+      _id,
       email,
       name,
     };
@@ -85,7 +85,7 @@ router.post(
     const { name, email, _id } = user.toObject();
 
     const userPayload = {
-      id: _id,
+      _id,
       name,
       email,
     };

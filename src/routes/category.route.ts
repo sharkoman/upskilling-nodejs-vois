@@ -1,12 +1,18 @@
 import { Router } from "express";
-import { asyncRoute } from "@/utils/async-route.util";
+import { asyncRoute } from "@/utils";
 import { RESPONSE_STATUS, VALIDATION_MESSAGES } from "@/constants";
 import { validateCategory, Category } from "@/models/categories";
 
 const router = Router();
 
 router.get("/", asyncRoute(async (_req, res) => {
-  res.send("Categories...");
+  const categories = await Category.find();
+
+  const data = categories.map((category) => {
+    return category.toObject();
+  });
+
+  res.send(data);
 }));
 
 router.post("/", asyncRoute(async (req, res) => {

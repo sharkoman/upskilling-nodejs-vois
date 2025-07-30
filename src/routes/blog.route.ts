@@ -1,47 +1,97 @@
 import { Router } from "express";
-import { asyncRoute } from "@/utils/async-route.util";
-import { validateBlog } from "@/models/blog";
+import { asyncRoute } from "@/utils";
+import { TBlogPayload, validateBlog, Blog } from "@/models/blog";
 import { RESPONSE_STATUS, VALIDATION_MESSAGES } from "@/constants";
-import Blog from "@/models/blog/blog.model";
+import { IPaginatedResponse } from "@/interfaces";
 
 const router = Router();
 
-router.get("/", asyncRoute(async (_req, res) => {
-  res.send("Blogs...");
-}));
+router.get(
+  "/",
+  asyncRoute(async (req, res) => {
+    // Get all blogs paginated with same structure as IPaginatedResponse, 
+    // the route should be /blogs?page=1&limit=10 with default page and limit of 10
+    const { page = 1, limit = 10 } = req.query;
+    const pageNumber = Number(page);
+    const limitNumber = Number(limit);
+    
+    const blogs = await Blog.find()
+      .populate("category", "name _id")
+      .populate("owner", "name email")
+      .skip((pageNumber - 1) * limitNumber)
+      .limit(limitNumber);
 
-router.get("/:id", asyncRoute(async (req, res) => {
-  res.send("Blog by id...");
-}));
-
-router.post("/", asyncRoute(async (req, res) => {
-  const { error, success, data } = validateBlog(req.body);
-
-  if (!success) {
-    return res.status(RESPONSE_STATUS.BAD_REQUEST).json({
-      errors: error,
+    const data = blogs.map((blog) => {
+      return blog.toObject();
+      // const { _id, category, owner, title, content } = blog.toObject();
+      // return {
+      //   id: _id.toString(),
+      //   title,
+      //   content,
+      //   category,
+      //   owner,
+      // };
     });
-  }
 
-  const isBlogExists = await Blog.findOne({ title: data?.title });
+    console.log(data);
 
-  if (isBlogExists) {
-    return res.status(RESPONSE_STATUS.BAD_REQUEST).json({
-      message: VALIDATION_MESSAGES.ITEM_ALREADY_EXISTS,
-    });
-  }
+    // const total = await Blog.countDocuments({});
 
-  const blog = await Blog.create(data);
+    // const payload: IPaginatedResponse<TBlogPayload> = {
+    //   data,
+    //   total,
+    //   page: pageNumber,
+    //   limit: limitNumber,
+    // };
 
-  res.status(RESPONSE_STATUS.CREATED).json(blog);
-}));
+    res.status(RESPONSE_STATUS.SUCCESS).json(data);
+  })
+);
 
-router.put("/:id", asyncRoute(async (req, res) => {
-  res.send("Update Blog...");
-}));
+router.get(
+  "/:id",
+  asyncRoute(async (req, res) => {
+    res.send("Blog by id...");
+  })
+);
 
-router.delete("/:id", asyncRoute(async (req, res) => {
-  res.send("Delete Blog...");
-}));
+router.post(
+  "/",
+  asyncRoute(async (req, res) => {
+    const { error, success, data } = validateBlog(req.body);
+
+    if (!success) {
+      return res.status(RESPONSE_STATUS.BAD_REQUEST).json({
+        errors: error,
+      });
+    }
+
+    const isBlogExists = await Blog.findOne({ title: data?.title });
+
+    if (isBlogExists) {
+      return res.status(RESPONSE_STATUS.BAD_REQUEST).json({
+        message: VALIDATION_MESSAGES.ITEM_ALREADY_EXISTS,
+      });
+    }
+
+    const blog = await Blog.create(data);
+
+    res.status(RESPONSE_STATUS.CREATED).json(blog);
+  })
+);
+
+router.put(
+  "/:id",
+  asyncRoute(async (req, res) => {
+    res.send("Update Blog...");
+  })
+);
+
+router.delete(
+  "/:id",
+  asyncRoute(async (req, res) => {
+    res.send("Delete Blog...");
+  })
+);
 
 export default router;

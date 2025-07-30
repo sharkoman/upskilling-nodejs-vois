@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { RESPONSE_STATUS, VALIDATION_MESSAGES } from "@/constants";
 import { User, validateUpdateUser } from "@/models/users";
-import { asyncRoute } from "@/utils/async-route.util";
+import { asyncRoute } from "@/utils";
 
 const router = Router();
 

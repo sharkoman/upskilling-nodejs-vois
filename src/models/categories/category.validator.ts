@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { VALIDATION_MESSAGES, VALIDATION_NUMBERS } from "@/constants";
-import { validateRequestBody } from "@/utils/validate-request-body.util";
+import { validateRequestBody } from "@/utils";
 import { TCategory } from "./category.interface";
 
 export const categoryValidatorSchema = z.object({
