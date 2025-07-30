@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { RESPONSE_STATUS, VALIDATION_MESSAGES } from "@/constants";
 import { asyncRoute } from "@/shared/utils";
-import { compare } from "bcrypt-ts";
-import { User } from "@/models/users";
+import { compare, genSalt, hash } from "bcrypt-ts";
+import { User, validateUser } from "@/models/users";
 import { validateAuthLogin, IAuthLoginResponse } from "@/models/auth";
 import jwt from "jsonwebtoken";
 
@@ -51,6 +51,53 @@ router.get(
     };
 
     res.status(RESPONSE_STATUS.SUCCESS).json(payload);
+  })
+);
+
+router.post(
+  "/register",
+  asyncRoute(async (req, res) => {
+    const { error, success, data } = validateUser(req.body);
+
+    if (!success) {
+      return res.status(RESPONSE_STATUS.BAD_REQUEST).json({
+        errors: error,
+      });
+    }
+
+    const isUserExists = await User.findOne({ email: data!.email });
+
+    if (isUserExists) {
+      return res.status(RESPONSE_STATUS.BAD_REQUEST).json({
+        message: VALIDATION_MESSAGES.ITEM_ALREADY_EXISTS,
+      });
+    }
+
+    const salt = await genSalt(10);
+    const hashedPassword = await hash(data!.password, salt);
+
+    const user = await User.create({
+      ...data,
+      password: hashedPassword,
+    });
+
+    // Create login token after user is created.
+    const { name, email, _id } = user.toObject();
+
+    const userPayload = {
+      id: _id,
+      name,
+      email,
+    };
+
+    const token = jwt.sign(userPayload, process.env.JWT_SECRET!);
+
+    const payload: IAuthLoginResponse = {
+      user: userPayload,
+      token,
+    };
+
+    res.status(RESPONSE_STATUS.CREATED).json(payload);
   })
 );
 

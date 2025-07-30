@@ -1,41 +1,9 @@
 import { Router } from "express";
 import { RESPONSE_STATUS, VALIDATION_MESSAGES } from "@/constants";
-import { User, validateUser, validateUpdateUser } from "@/models/users";
+import { User, validateUpdateUser } from "@/models/users";
 import { asyncRoute } from "@/utils/async-route.util";
-import { genSalt, hash } from "bcrypt-ts";
 
 const router = Router();
-
-router.post(
-  "/",
-  asyncRoute(async (req, res) => {
-    const { error, success, data } = validateUser(req.body);
-
-    if (!success) {
-      return res.status(RESPONSE_STATUS.BAD_REQUEST).json({
-        errors: error,
-      });
-    }
-
-    const isUserExists = await User.findOne({ email: data!.email });
-
-    if (isUserExists) {
-      return res.status(RESPONSE_STATUS.BAD_REQUEST).json({
-        message: VALIDATION_MESSAGES.ITEM_ALREADY_EXISTS,
-      });
-    }
-
-    const salt = await genSalt(10);
-    const hashedPassword = await hash(data!.password, salt);
-
-    const user = await User.create({
-      ...data,
-      password: hashedPassword,
-    });
-
-    res.status(RESPONSE_STATUS.CREATED).json(user);
-  })
-);
 
 router.patch(
   "/:id",
