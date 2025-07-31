@@ -20,27 +20,6 @@ export const initAppRoutes = (app: Express) => {
   app.use("/api/categories", categoryRoute);
   app.use("/api/blogs", blogRoute);
   app.use("/api/users", userRoute);
-
-  // Health Check
-  /**
-   * @swagger
-   * /api/health:
-   *   get:
-   *     summary: Health check endpoint
-   *     tags: [System]
-   *     security: []
-   *     responses:
-   *       200:
-   *         description: Server is healthy
-   *         content:
-   *           text/plain:
-   *             schema:
-   *               type: string
-   *               example: "Hello World"
-   */
-  app.get("/api/health", (_req, res) => {
-    res.send("Hello World");
-  });
   
   // Error Middleware
   app.use(errorMiddleware);
