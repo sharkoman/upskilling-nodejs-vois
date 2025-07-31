@@ -7,7 +7,7 @@ import { validateAuthLogin, IAuthLoginResponse } from "@/models/auth";
 
 const router = Router();
 
-router.get(
+router.post(
   "/login",
   asyncRoute(async (req, res) => {
     const { error, success, data } = validateAuthLogin(req.body);
