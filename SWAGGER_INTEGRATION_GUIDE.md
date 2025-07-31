@@ -44,6 +44,10 @@ Most endpoints require JWT Bearer token authentication. Use the "Authorize" butt
 #### 🏥 System
 - `GET /api/health` - Health check endpoint
 
+#### 📖 Documentation
+- `GET /api-docs` - Interactive Swagger UI
+- `GET /api-docs.json` - OpenAPI specification
+
 ## Schema Documentation
 
 ### Data Models
@@ -62,6 +66,37 @@ Most endpoints require JWT Bearer token authentication. Use the "Authorize" butt
 - **Type**: Bearer Token (JWT)
 - **Header**: `Authorization: Bearer <token>`
 - **Note**: Obtain tokens via `/api/auth/login` or `/api/auth/register`
+
+## How to Copy JWT Tokens in Swagger UI
+
+### Step-by-Step Guide:
+
+1. **Login/Register**: 
+   - Go to the `POST /api/auth/login` or `POST /api/auth/register` endpoint
+   - Click "Try it out" 
+   - Fill in your credentials
+   - Click "Execute"
+
+2. **Copy Token**:
+   - In the response section, you'll see a JSON response
+   - Look for the `"token"` field
+   - **Manual Copy**: Select and copy the token value (everything between the quotes after `"token":`)
+   - **Browser DevTools**: Right-click → Inspect → Copy from developer console
+
+3. **Authorize**:
+   - Click the 🔒 "Authorize" button at the top of Swagger UI
+   - Paste the token in the "Value" field (without "Bearer " prefix)
+   - Click "Authorize" and then "Close"
+
+4. **Test Protected Endpoints**:
+   - You can now access all protected endpoints
+   - The authorization will persist until you refresh the page
+
+### Pro Tips:
+- Use browser extensions like "JSON Viewer" for better JSON formatting
+- The token field will be clearly marked in the response
+- Copy only the token value, not the quotes or "Bearer " prefix
+- Tokens persist in Swagger UI until page refresh
 
 ## Development Features
 
@@ -89,6 +124,7 @@ Most endpoints require JWT Bearer token authentication. Use the "Authorize" butt
 
 ### Configuration Files
 - `src/config/swagger.config.ts` - Main Swagger configuration
+- `src/routes/swagger.route.ts` - Swagger documentation routes
 - JSDoc comments in route files - Endpoint documentation
 
 ### Key Features
@@ -98,6 +134,7 @@ Most endpoints require JWT Bearer token authentication. Use the "Authorize" butt
 - Request/response validation
 - Interactive UI with "Try it out" functionality
 - Persistent authorization across page reloads
+- Modular route structure
 
 ## Usage Examples
 
@@ -122,7 +159,16 @@ curl -X POST "http://localhost:3000/api/auth/login" \
   }'
 ```
 
-### 3. Create Blog (with JWT)
+### 3. Extract Token with jq
+```bash
+TOKEN=$(curl -s -X POST "http://localhost:3000/api/auth/login" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"john@example.com","password":"Password123!"}' \
+  | jq -r '.token')
+echo $TOKEN
+```
+
+### 4. Create Blog (with JWT)
 ```bash
 curl -X POST "http://localhost:3000/api/blogs" \
   -H "Content-Type: application/json" \
@@ -132,6 +178,22 @@ curl -X POST "http://localhost:3000/api/blogs" \
     "content": "This is the content of my blog post",
     "category": "64f7b1a2c3d4e5f6789a0b1c"
   }'
+```
+
+## Project Structure
+
+```
+src/
+├── config/
+│   └── swagger.config.ts          # Swagger configuration & schemas
+├── routes/
+│   ├── swagger.route.ts           # Documentation routes
+│   ├── auth.route.ts              # Authentication endpoints
+│   ├── blog.route.ts              # Blog CRUD endpoints
+│   ├── category.route.ts          # Category management
+│   └── user.route.ts              # User management
+└── startup/
+    └── routes.startup.ts          # Route initialization
 ```
 
 ## Development Workflow
@@ -149,3 +211,4 @@ curl -X POST "http://localhost:3000/api/blogs" \
 - JWT tokens must be valid and non-expired for protected endpoints
 - The health endpoint (`/api/health`) is publicly accessible
 - Swagger UI persists authorization tokens across browser sessions
+- Documentation routes are now properly organized in dedicated route file
