@@ -1,7 +1,11 @@
 import { Router } from "express";
 import { asyncRoute } from "@/utils";
 import { RESPONSE_STATUS, VALIDATION_MESSAGES } from "@/constants";
-import { validateCategory, Category, TCategoryPayload } from "@/models/categories";
+import {
+  validateCategory,
+  Category,
+  TCategoryPayload,
+} from "@/models/categories";
 import { Document } from "mongoose";
 import { authMiddleware } from "@/middlewares";
 
@@ -31,15 +35,19 @@ const router = Router();
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.get("/", [authMiddleware], asyncRoute(async (_req, res) => {
-  const categories = await Category.find<Document<TCategoryPayload>>();
+router.get(
+  "/",
+  [authMiddleware],
+  asyncRoute(async (_req, res) => {
+    const categories = await Category.find<Document<TCategoryPayload>>();
 
-  const data: TCategoryPayload[] = categories.map((category) => {
-    return category.toObject();
-  });
+    const data: TCategoryPayload[] = categories.map((category) => {
+      return category.toObject();
+    });
 
-  res.send(data);
-}));
+    res.send(data);
+  })
+);
 
 /**
  * @swagger
@@ -77,7 +85,10 @@ router.get("/", [authMiddleware], asyncRoute(async (_req, res) => {
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.post("/", [authMiddleware], asyncRoute(async (req, res) => {
+router.post(
+  "/",
+  [authMiddleware],
+  asyncRoute(async (req, res) => {
     const { error, success, data } = validateCategory(req.body);
 
     if (!success) {
@@ -97,7 +108,8 @@ router.post("/", [authMiddleware], asyncRoute(async (req, res) => {
     const category = await Category.create(data);
 
     res.status(RESPONSE_STATUS.CREATED).json(category);
-}));
+  })
+);
 
 /**
  * @swagger
@@ -146,9 +158,33 @@ router.post("/", [authMiddleware], asyncRoute(async (req, res) => {
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.put("/:id", asyncRoute(async (req, res) => {
-  res.send("Update Category...");
-}));
+router.put(
+  "/:id",
+  asyncRoute(async (req, res) => {
+    const { id } = req.params;
+    const { error, success, data } = validateCategory(req.body);
+
+    if (!success) {
+      return res.status(RESPONSE_STATUS.BAD_REQUEST).json({
+        errors: error,
+      });
+    }
+
+    const category = await Category.findByIdAndUpdate(
+      id,
+      { name: data!.name },
+      { new: true }
+    );
+
+    if (!category) {
+      return res.status(RESPONSE_STATUS.NOT_FOUND).json({
+        message: VALIDATION_MESSAGES.ITEM_NOT_FOUND,
+      });
+    }
+
+    res.status(RESPONSE_STATUS.SUCCESS).json(category);
+  })
+);
 
 /**
  * @swagger
@@ -185,8 +221,21 @@ router.put("/:id", asyncRoute(async (req, res) => {
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.delete("/:id", asyncRoute(async (req, res) => {
-  res.send("Delete Category...");
-}));
+router.delete(
+  "/:id",
+  asyncRoute(async (req, res) => {
+    const { id } = req.params;
+
+    const category = await Category.findByIdAndDelete(id);
+
+    if (!category) {
+      return res.status(RESPONSE_STATUS.NOT_FOUND).json({
+        message: VALIDATION_MESSAGES.ITEM_NOT_FOUND,
+      });
+    }
+
+    res.status(RESPONSE_STATUS.SUCCESS).json(category);
+  })
+);
 
 export default router;
