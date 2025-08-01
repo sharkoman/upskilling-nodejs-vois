@@ -1,4 +1,4 @@
-import { Router, Request } from "express";
+import { Router } from "express";
 import { asyncRoute } from "@/utils";
 import {
   TBlogPayload,
@@ -8,8 +8,9 @@ import {
 } from "@/models/blog";
 import { RESPONSE_STATUS, VALIDATION_MESSAGES } from "@/constants";
 import { IPaginatedResponse, IAuthenticatedRequest } from "@/interfaces";
-import { Document } from "mongoose";
+import { Document, RootFilterQuery } from "mongoose";
 import { authMiddleware, blogOwnershipMiddleware } from "@/middlewares";
+import { TBlogFilter } from "@/models/blog";
 
 const router = Router();
 
@@ -17,7 +18,7 @@ const router = Router();
  * @swagger
  * /api/blogs:
  *   get:
- *     summary: Get all blogs with pagination
+ *     summary: Get all blogs with pagination and filtering
  *     tags: [Blogs]
  *     security:
  *       - bearerAuth: []
@@ -37,6 +38,35 @@ const router = Router();
  *           maximum: 100
  *           default: 10
  *         description: Number of blogs per page
+ *       - in: query
+ *         name: categoryId
+ *         schema:
+ *           type: string
+ *         description: Filter blogs by category ID
+ *       - in: query
+ *         name: ownerId
+ *         schema:
+ *           type: string
+ *         description: Filter blogs by owner ID
+ *       - in: query
+ *         name: title
+ *         schema:
+ *           type: string
+ *         description: Search blogs by title (case-insensitive partial match)
+ *       - in: query
+ *         name: content
+ *         schema:
+ *           type: string
+ *         description: Search blogs by content (case-insensitive partial match)
+ *       - in: query
+ *         name: order
+ *         schema:
+ *           type: string
+ *           enum:
+ *             - asc
+ *             - desc
+ *           default: desc
+ *         description: Sort order by creation date
  *     responses:
  *       200:
  *         description: Blogs retrieved successfully
@@ -55,21 +85,51 @@ router.get(
   "/",
   [authMiddleware],
   asyncRoute(async (req, res) => {
-    const { page = 1, limit = 10 } = req.query;
+    const {
+      page = 1,
+      limit = 10,
+      categoryId,
+      ownerId,
+      title,
+      content,
+      order = "desc",
+    } = req.query as TBlogFilter;
+
     const pageNumber = Number(page);
     const limitNumber = Number(limit);
 
-    const blogs = await Blog.find<Document<TBlogPayload>>()
+    const filterQuery: RootFilterQuery<TBlogPayload> = {};
+
+    if (categoryId) {
+      filterQuery.category = categoryId;
+    }
+
+    if (ownerId) {
+      filterQuery.owner = ownerId;
+    }
+
+    if (title) {
+      filterQuery.title = new RegExp(title, "i");
+    }
+
+    if (content) {
+      filterQuery.content = {
+        $regex: new RegExp(content, "i"),
+      };
+    }
+
+    const blogs = await Blog.find<Document<TBlogPayload>>(filterQuery)
       .populate("category", "name _id")
       .populate("owner", "name email")
       .skip((pageNumber - 1) * limitNumber)
-      .limit(limitNumber);
+      .limit(limitNumber)
+      .sort({ createdAt: order === "asc" ? 1 : -1 });
 
     const data: TBlogPayload[] = blogs.map((blog) => {
       return blog.toObject();
     });
 
-    const total = await Blog.countDocuments({});
+    const total = await Blog.countDocuments(filterQuery);
 
     const payload: IPaginatedResponse<TBlogPayload> = {
       data,

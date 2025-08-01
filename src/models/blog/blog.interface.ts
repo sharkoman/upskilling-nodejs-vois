@@ -16,3 +16,13 @@ export type TBlogPayload = Payload<{
   category: ItemWithID<TCategory>;
   owner: ItemWithID<Omit<TUser, "password">>;
 }>;
+
+export type TBlogFilter = Partial<{
+  page: string;
+  limit: string;
+  order: 'asc' | 'desc';
+  categoryId: string;
+  ownerId: string;
+  title: string;
+  content: string;
+}>;
