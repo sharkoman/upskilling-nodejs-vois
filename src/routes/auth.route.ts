@@ -7,35 +7,7 @@ import { validateAuthLogin, IAuthLoginResponse } from "@/models/auth";
 
 const router = Router();
 
-/**
- * @swagger
- * /api/auth/login:
- *   post:
- *     summary: User login
- *     tags: [Authentication]
- *     security: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/LoginRequest'
- *     responses:
- *       200:
- *         description: Login successful
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/AuthResponse'
- *       400:
- *         description: Invalid credentials or validation errors
- *         content:
- *           application/json:
- *             schema:
- *               oneOf:
- *                 - $ref: '#/components/schemas/ErrorResponse'
- *                 - $ref: '#/components/schemas/ValidationErrorResponse'
- */
+
 router.post(
   "/login",
   asyncRoute(async (req, res) => {
@@ -82,35 +54,7 @@ router.post(
   })
 );
 
-/**
- * @swagger
- * /api/auth/register:
- *   post:
- *     summary: User registration
- *     tags: [Authentication]
- *     security: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/User'
- *     responses:
- *       201:
- *         description: User registered successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/AuthResponse'
- *       400:
- *         description: User already exists or validation errors
- *         content:
- *           application/json:
- *             schema:
- *               oneOf:
- *                 - $ref: '#/components/schemas/ErrorResponse'
- *                 - $ref: '#/components/schemas/ValidationErrorResponse'
- */
+
 router.post(
   "/register",
   asyncRoute(async (req, res) => {

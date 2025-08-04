@@ -14,73 +14,7 @@ import { TBlogFilter } from "@/models/blog";
 
 const router = Router();
 
-/**
- * @swagger
- * /api/blogs:
- *   get:
- *     summary: Get all blogs with pagination and filtering
- *     tags: [Blogs]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: query
- *         name: page
- *         schema:
- *           type: integer
- *           minimum: 1
- *           default: 1
- *         description: Page number for pagination
- *       - in: query
- *         name: limit
- *         schema:
- *           type: integer
- *           minimum: 1
- *           maximum: 100
- *           default: 10
- *         description: Number of blogs per page
- *       - in: query
- *         name: categoryId
- *         schema:
- *           type: string
- *         description: Filter blogs by category ID
- *       - in: query
- *         name: ownerId
- *         schema:
- *           type: string
- *         description: Filter blogs by owner ID
- *       - in: query
- *         name: title
- *         schema:
- *           type: string
- *         description: Search blogs by title (case-insensitive partial match)
- *       - in: query
- *         name: content
- *         schema:
- *           type: string
- *         description: Search blogs by content (case-insensitive partial match)
- *       - in: query
- *         name: order
- *         schema:
- *           type: string
- *           enum:
- *             - asc
- *             - desc
- *           default: desc
- *         description: Sort order by creation date
- *     responses:
- *       200:
- *         description: Blogs retrieved successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/PaginatedBlogResponse'
- *       401:
- *         description: Authentication required
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- */
+
 router.get(
   "/",
   [authMiddleware],
@@ -142,41 +76,7 @@ router.get(
   })
 );
 
-/**
- * @swagger
- * /api/blogs/{id}:
- *   get:
- *     summary: Get a specific blog by ID
- *     tags: [Blogs]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: Blog unique identifier
- *     responses:
- *       200:
- *         description: Blog retrieved successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/BlogResponse'
- *       401:
- *         description: Authentication required
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- *       404:
- *         description: Blog not found
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- */
+
 router.get(
   "/:id",
   [authMiddleware],
@@ -185,42 +85,7 @@ router.get(
   })
 );
 
-/**
- * @swagger
- * /api/blogs:
- *   post:
- *     summary: Create a new blog post
- *     tags: [Blogs]
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Blog'
- *     responses:
- *       201:
- *         description: Blog created successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/BlogResponse'
- *       400:
- *         description: Blog already exists or validation errors
- *         content:
- *           application/json:
- *             schema:
- *               oneOf:
- *                 - $ref: '#/components/schemas/ErrorResponse'
- *                 - $ref: '#/components/schemas/ValidationErrorResponse'
- *       401:
- *         description: Authentication required
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- */
+
 router.post(
   "/",
   [authMiddleware],
@@ -254,59 +119,7 @@ router.post(
   })
 );
 
-/**
- * @swagger
- * /api/blogs/{id}:
- *   put:
- *     summary: Update a blog post (owner only)
- *     tags: [Blogs]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: Blog unique identifier
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Blog'
- *     responses:
- *       200:
- *         description: Blog updated successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/BlogResponse'
- *       400:
- *         description: Validation errors
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ValidationErrorResponse'
- *       401:
- *         description: Authentication required
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- *       403:
- *         description: Not authorized to update this blog
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- *       404:
- *         description: Blog not found
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- */
+
 router.put(
   "/:id",
   [authMiddleware, blogOwnershipMiddleware],
@@ -333,47 +146,7 @@ router.put(
   })
 );
 
-/**
- * @swagger
- * /api/blogs/{id}:
- *   delete:
- *     summary: Delete a blog post (owner only)
- *     tags: [Blogs]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: Blog unique identifier
- *     responses:
- *       200:
- *         description: Blog deleted successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/BlogResponse'
- *       401:
- *         description: Authentication required
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- *       403:
- *         description: Not authorized to delete this blog
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- *       404:
- *         description: Blog not found
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- */
+
 router.delete(
   "/:id",
   [authMiddleware, blogOwnershipMiddleware],
