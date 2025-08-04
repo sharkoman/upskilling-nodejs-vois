@@ -6,7 +6,7 @@ import userRoute from "../routes/user.route";
 import authRoute from "../routes/auth.route";
 import swaggerRoute from "../routes/swagger.route";
 import { errorMiddleware } from "@/middlewares";
-import { swaggerSpec, swaggerUiOptions } from "../config/swagger.config";
+import { swaggerSpec, swaggerUiOptions } from "../docs/swagger.config";
 
 export const initAppRoutes = (app: Express) => {
   app.use(express.json());

@@ -4,7 +4,7 @@ const router = Router();
 
 
 router.get('/api-docs.json', (_req, res) => {
-  const { swaggerSpec } = require('../config/swagger.config');
+  const { swaggerSpec } = require('../docs/swagger.config');
   res.setHeader('Content-Type', 'application/json');
   res.send(swaggerSpec);
 });
