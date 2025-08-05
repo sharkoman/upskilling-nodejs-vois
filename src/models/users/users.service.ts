@@ -15,7 +15,7 @@ class UserService {
   }
 
   static findOne(filter: Partial<TUserPayload>) {
-    return User.findOne<Document<TUser>>(filter);
+    return User.findOne(filter);
   }
   
   static createUser(user: TUser) {

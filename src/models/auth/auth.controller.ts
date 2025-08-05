@@ -16,9 +16,7 @@ class AuthController {
       });
     }
 
-    const user = await UserService.findOne({ email: data?.email }).select(
-      "password"
-    );
+    const user = await UserService.findOne({ email: data?.email });
 
     if (!user) {
       return res.status(RESPONSE_STATUS.BAD_REQUEST).json({
@@ -26,7 +24,7 @@ class AuthController {
       });
     }
 
-    const { password, generateAuthToken } = user.toObject();
+    const { password } = user.toObject();
 
     const isPasswordValid = await compare(data!.password, password);
 
@@ -44,7 +42,7 @@ class AuthController {
       name,
     };
 
-    const token = generateAuthToken();
+    const token = user.generateAuthToken();
 
     const payload: IAuthLoginResponse = {
       user: userPayload,
@@ -74,11 +72,12 @@ class AuthController {
     const salt = await genSalt(10);
     const hashedPassword = await hash(data!.password, salt);
 
-    const { _id, name, email, generateAuthToken } =
-      await UserService.createUser({
-        ...data!,
-        password: hashedPassword,
-      });
+    const createdUser = await UserService.createUser({
+      ...data!,
+      password: hashedPassword,
+    });
+
+    const { _id, name, email } = createdUser.toObject();
 
     const userPayload = {
       _id,
@@ -86,7 +85,7 @@ class AuthController {
       email,
     };
 
-    const token = generateAuthToken();
+    const token = createdUser.generateAuthToken();
 
     const payload: IAuthLoginResponse = {
       user: userPayload,
