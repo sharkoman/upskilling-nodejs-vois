@@ -1,14 +1,26 @@
 import { Router } from "express";
 import { asyncRoute } from "@/utils";
-import { authMiddleware } from "@/middlewares";
-import CategoryController from "@/models/categories/categories.controller";
+import { authMiddleware, validateBodyMiddleware } from "@/middlewares";
+import { CategoryController, validateCategory } from "@/models/categories";
 
 const router = Router();
 
 router
   .get("/", [authMiddleware], asyncRoute(CategoryController.getCategories))
-  .post("/", [authMiddleware], asyncRoute(CategoryController.addCategory))
-  .put("/:id", [authMiddleware], asyncRoute(CategoryController.updateCategory))
-  .delete("/:id", [authMiddleware], asyncRoute(CategoryController.deleteCategory));
+  .post(
+    "/",
+    [authMiddleware, validateBodyMiddleware(validateCategory)],
+    asyncRoute(CategoryController.addCategory)
+  )
+  .put(
+    "/:id",
+    [authMiddleware, validateBodyMiddleware(validateCategory)],
+    asyncRoute(CategoryController.updateCategory)
+  )
+  .delete(
+    "/:id",
+    [authMiddleware],
+    asyncRoute(CategoryController.deleteCategory)
+  );
 
 export default router;

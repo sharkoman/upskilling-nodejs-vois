@@ -1,13 +1,13 @@
 import { Router } from "express";
 import { asyncRoute } from "@/utils";
-import UserController from "@/models/users/users.controller";
-import { authMiddleware } from "@/middlewares";
+import { authMiddleware, validateBodyMiddleware } from "@/middlewares";
+import { UserController, validateUpdateUser } from "@/models/users";
 
 const router = Router();
 
 router.patch(
   "/:id",
-  [authMiddleware],
+  [authMiddleware, validateBodyMiddleware(validateUpdateUser)],
   asyncRoute(UserController.updateUserName)
 );
 

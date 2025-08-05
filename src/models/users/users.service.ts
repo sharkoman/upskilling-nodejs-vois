@@ -1,4 +1,4 @@
-import { TUserPayload, TUpdateUser, User, TUser } from ".";
+import { TUserPayload, TUpdateUser, User, TUser, IUserDocument } from ".";
 import { Document } from "mongoose";
 
 class UserService {
@@ -14,11 +14,11 @@ class UserService {
     return payload?.toObject();
   }
 
-  static findOne(filter: Partial<TUserPayload>) {
+  static findOne(filter: Partial<TUserPayload>): Promise<IUserDocument | null> {
     return User.findOne(filter);
   }
   
-  static createUser(user: TUser) {
+  static createUser(user: TUser): Promise<IUserDocument> {
     return User.create(user);
   }
 }

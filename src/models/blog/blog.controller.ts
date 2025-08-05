@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { TBlogFilter, Blog, TBlogRequestBody, validateBlog } from ".";
+import { TBlogFilter, Blog, TBlogRequestBody } from ".";
 import { RootFilterQuery } from "mongoose";
 import BlogService from "./blog.service";
 import { TBlogPayload } from ".";
@@ -77,13 +77,7 @@ class BlogController {
   }
 
   static async createBlog(req: IAuthenticatedRequest, res: Response) {
-    const { error, success, data } = validateBlog(req.body);
-
-    if (!success) {
-      return res.status(RESPONSE_STATUS.BAD_REQUEST).json({
-        errors: error,
-      });
-    }
+    const data = req.body;
 
     const isBlogExists = await BlogService.findOne({ title: data?.title });
 
@@ -104,13 +98,7 @@ class BlogController {
   }
 
   static async updateBlog(req: Request, res: Response) {
-    const { error, success, data } = validateBlog(req.body);
-
-    if (!success) {
-      return res.status(RESPONSE_STATUS.BAD_REQUEST).json({
-        errors: error,
-      });
-    }
+    const data = req.body;
 
     const blog = await BlogService.findByIdAndUpdate(req.params.id, data!);
 

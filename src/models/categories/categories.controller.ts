@@ -4,20 +4,14 @@ import CategoryService from "./categories.service";
 import { validateCategory } from "./category.validator";
 import { VALIDATION_MESSAGES } from "@/constants";
 
-class BlogController {
+class CategoryController {
   static getCategories = async (_req: Request, res: Response) => {
     const categories = await CategoryService.findAll();
     res.status(RESPONSE_STATUS.SUCCESS).json(categories);
   };
 
   static addCategory = async (req: Request, res: Response) => {
-    const { error, success, data } = validateCategory(req.body);
-
-    if (!success) {
-      return res.status(RESPONSE_STATUS.BAD_REQUEST).json({
-        errors: error,
-      });
-    }
+    const data = req.body;
 
     const isCategoryExists = await CategoryService.findOne({
       name: data?.name!,
@@ -36,23 +30,31 @@ class BlogController {
 
   static updateCategory = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { error, success, data } = validateCategory(req.body);
+    const data = req.body;
 
-    if (!success) {
-      return res.status(RESPONSE_STATUS.BAD_REQUEST).json({
-        errors: error,
+    const category = await CategoryService.update(id, data!);
+
+    if (!category) {
+      return res.status(RESPONSE_STATUS.NOT_FOUND).json({
+        message: VALIDATION_MESSAGES.ITEM_NOT_FOUND,
       });
     }
 
-    const category = await CategoryService.update(id, data!);
     res.status(RESPONSE_STATUS.SUCCESS).json(category);
   };
 
   static deleteCategory = async (req: Request, res: Response) => {
     const { id } = req.params;
     const category = await CategoryService.delete(id);
+
+    if (!category) {
+      return res.status(RESPONSE_STATUS.NOT_FOUND).json({
+        message: VALIDATION_MESSAGES.ITEM_NOT_FOUND,
+      });
+    }
+
     res.status(RESPONSE_STATUS.SUCCESS).json(category);
   };
 }
 
-export default BlogController;
+export default CategoryController;

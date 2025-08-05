@@ -1,20 +1,13 @@
 import { RESPONSE_STATUS, VALIDATION_MESSAGES } from "@/constants";
 import { compare, genSalt, hash } from "bcrypt-ts";
 import { IAuthLoginResponse } from "./auth.interface";
-import { validateAuthLogin } from "./auth.validator";
 import { Request, Response } from "express";
-import UserService from "../users/users.service";
-import { validateUser } from "../users/user.validator";
+import { TUser } from "@/models/users";
+import {UserService} from "@/models/users";
 
 class AuthController {
   static async login(req: Request, res: Response) {
-    const { error, success, data } = validateAuthLogin(req.body);
-
-    if (!success) {
-      return res.status(RESPONSE_STATUS.BAD_REQUEST).json({
-        errors: error,
-      });
-    }
+    const data = req.body;
 
     const user = await UserService.findOne({ email: data?.email });
 
@@ -53,15 +46,9 @@ class AuthController {
   }
 
   static async register(req: Request, res: Response) {
-    const { error, success, data } = validateUser(req.body);
+    const data = req.body as TUser;
 
-    if (!success) {
-      return res.status(RESPONSE_STATUS.BAD_REQUEST).json({
-        errors: error,
-      });
-    }
-
-    const isUserExists = await UserService.findOne({ email: data!.email });
+    const isUserExists = await UserService.findOne({ email: data.email });
 
     if (isUserExists) {
       return res.status(RESPONSE_STATUS.BAD_REQUEST).json({
@@ -70,10 +57,10 @@ class AuthController {
     }
 
     const salt = await genSalt(10);
-    const hashedPassword = await hash(data!.password, salt);
+    const hashedPassword = await hash(data.password, salt);
 
     const createdUser = await UserService.createUser({
-      ...data!,
+      ...data,
       password: hashedPassword,
     });
 

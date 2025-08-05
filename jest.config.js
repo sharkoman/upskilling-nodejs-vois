@@ -3,7 +3,7 @@ export default {
   preset: 'ts-jest',
   extensionsToTreatAsEsm: ['.ts'],
   testEnvironment: 'node', 
-  roots: ['<rootDir>/src'],
+  roots: ['<rootDir>/src', '<rootDir>/__tests__'],
   testMatch: [
     '**/__tests__/**/*.ts',
     '**/?(*.)+(spec|test).ts'

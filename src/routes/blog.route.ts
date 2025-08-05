@@ -1,17 +1,29 @@
 import { Router } from "express";
 import { asyncRoute } from "@/utils";
-import { authMiddleware, blogOwnershipMiddleware } from "@/middlewares";
-import BlogController from "@/models/blog/blog.controller";
+import {
+  authMiddleware,
+  blogOwnershipMiddleware,
+  validateBodyMiddleware,
+} from "@/middlewares";
+import { BlogController, validateBlog } from "@/models/blog";
 
 const router = Router();
 
 router
   .get("/", [authMiddleware], asyncRoute(BlogController.getBlogs))
   .get("/:id", [authMiddleware], asyncRoute(BlogController.getBlog))
-  .post("/", [authMiddleware], asyncRoute(BlogController.createBlog))
+  .post(
+    "/",
+    [authMiddleware, validateBodyMiddleware(validateBlog)],
+    asyncRoute(BlogController.createBlog)
+  )
   .put(
     "/:id",
-    [authMiddleware, blogOwnershipMiddleware],
+    [
+      authMiddleware,
+      blogOwnershipMiddleware,
+      validateBodyMiddleware(validateBlog),
+    ],
     asyncRoute(BlogController.updateBlog)
   )
   .delete(
