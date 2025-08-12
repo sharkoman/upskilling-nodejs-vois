@@ -2,7 +2,7 @@ import { Router } from "express";
 import { asyncRoute } from "@/utils";
 import {
   authMiddleware,
-  blogOwnershipMiddleware,
+  protectUserMiddleware,
   validateBodyMiddleware,
 } from "@/middlewares";
 import { BlogController, validateBlog } from "@/models/blog";
@@ -21,14 +21,14 @@ router
     "/:id",
     [
       authMiddleware,
-      blogOwnershipMiddleware,
+      protectUserMiddleware,
       validateBodyMiddleware(validateBlog),
     ],
     asyncRoute(BlogController.updateBlog)
   )
   .delete(
     "/:id",
-    [authMiddleware, blogOwnershipMiddleware],
+    [authMiddleware, protectUserMiddleware],
     asyncRoute(BlogController.deleteBlog)
   );
 
