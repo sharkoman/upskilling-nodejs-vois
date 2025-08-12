@@ -12,9 +12,14 @@ class AuthController {
     const user = await UserService.findOne({ email: data?.email });
 
     if (!user) {
-      return res.status(RESPONSE_STATUS.BAD_REQUEST).json({
+      res.status(RESPONSE_STATUS.BAD_REQUEST).json({
         message: VALIDATION_MESSAGES.USER_OR_PASSWORD_INVALID,
       });
+
+      return {
+        message: VALIDATION_MESSAGES.USER_OR_PASSWORD_INVALID,
+        status: RESPONSE_STATUS.BAD_REQUEST,
+      };
     }
 
     const { password } = user.toObject();
@@ -22,9 +27,14 @@ class AuthController {
     const isPasswordValid = await compare(data!.password, password);
 
     if (!isPasswordValid) {
-      return res.status(RESPONSE_STATUS.BAD_REQUEST).json({
+      res.status(RESPONSE_STATUS.BAD_REQUEST).json({
         message: VALIDATION_MESSAGES.USER_OR_PASSWORD_INVALID,
       });
+
+      return {
+        message: VALIDATION_MESSAGES.USER_OR_PASSWORD_INVALID,
+        status: RESPONSE_STATUS.BAD_REQUEST,
+      };
     }
 
     const { name, email, _id } = user.toObject();
@@ -43,6 +53,9 @@ class AuthController {
     };
 
     res.status(RESPONSE_STATUS.SUCCESS).json(payload);
+    
+    // Return the payload for testing purposes
+    return payload;
   }
 
   static async register(req: Request, res: Response) {
@@ -51,9 +64,14 @@ class AuthController {
     const isUserExists = await UserService.findOne({ email: data.email });
 
     if (isUserExists) {
-      return res.status(RESPONSE_STATUS.BAD_REQUEST).json({
+      res.status(RESPONSE_STATUS.BAD_REQUEST).json({
         message: VALIDATION_MESSAGES.USER_ALREADY_EXISTS,
       });
+
+      return {
+        message: VALIDATION_MESSAGES.USER_ALREADY_EXISTS,
+        status: RESPONSE_STATUS.BAD_REQUEST,
+      };
     }
 
     const salt = await genSalt(10);
@@ -80,6 +98,9 @@ class AuthController {
     };
 
     res.status(RESPONSE_STATUS.CREATED).json(payload);
+    
+    // Return the payload for testing purposes
+    return payload;
   }
 }
 

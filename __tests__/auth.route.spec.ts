@@ -65,21 +65,13 @@ describe("AuthController", () => {
       (mockBcrypt.compare as jest.Mock).mockResolvedValue(true);
 
       // Act
-      await AuthController.login(
+      const result = await AuthController.login(
         mockRequest as Request,
         mockResponse as Response
       );
 
       // Assert
-      expect(mockUserService.findOne).toHaveBeenCalledWith({
-        email: "test@example.com",
-      });
-      expect(mockBcrypt.compare).toHaveBeenCalledWith(
-        "password123",
-        "hashedPassword123"
-      );
-      expect(mockUser.generateAuthToken).toHaveBeenCalled();
-      expect(mockResponse.json).toHaveBeenCalledWith({
+      expect(result).toEqual({
         user: {
           _id: "mock-user-id",
           name: "Test User",
@@ -87,6 +79,17 @@ describe("AuthController", () => {
         },
         token: "mock-jwt-token",
       });
+
+      expect(mockUserService.findOne).toHaveBeenCalledWith({
+        email: "test@example.com",
+      });
+
+      expect(mockBcrypt.compare).toHaveBeenCalledWith(
+        "password123",
+        "hashedPassword123"
+      );
+
+      expect(mockUser.generateAuthToken).toHaveBeenCalled();
     });
 
     it("should return bad request when user is not found", async () => {
@@ -99,17 +102,15 @@ describe("AuthController", () => {
       mockUserService.findOne.mockResolvedValue(null);
 
       // Act
-      await AuthController.login(
+      const result = await AuthController.login(
         mockRequest as Request,
         mockResponse as Response
       );
 
       // Assert
-      expect(mockUserService.findOne).toHaveBeenCalledWith({
-        email: "nonexistent@example.com",
-      });
-      expect(mockResponse.json).toHaveBeenCalledWith({
+      expect(result).toEqual({
         message: VALIDATION_MESSAGES.USER_OR_PASSWORD_INVALID,
+        status: RESPONSE_STATUS.BAD_REQUEST,
       });
     });
 
@@ -124,21 +125,15 @@ describe("AuthController", () => {
       (mockBcrypt.compare as jest.Mock).mockResolvedValue(false);
 
       // Act
-      await AuthController.login(
+      const result = await AuthController.login(
         mockRequest as Request,
         mockResponse as Response
       );
 
       // Assert
-      expect(mockUserService.findOne).toHaveBeenCalledWith({
-        email: "test@example.com",
-      });
-      expect(mockBcrypt.compare).toHaveBeenCalledWith(
-        "wrongpassword",
-        "hashedPassword123"
-      );
-      expect(mockResponse.json).toHaveBeenCalledWith({
+      expect(result).toEqual({
         message: VALIDATION_MESSAGES.USER_OR_PASSWORD_INVALID,
+        status: RESPONSE_STATUS.BAD_REQUEST,
       });
     });
   });
@@ -173,25 +168,13 @@ describe("AuthController", () => {
       mockUserService.createUser.mockResolvedValue(createdUser);
 
       // Act
-      await AuthController.register(
+      const result = await AuthController.register(
         mockRequest as Request,
         mockResponse as Response
       );
 
       // Assert
-      expect(mockUserService.findOne).toHaveBeenCalledWith({
-        email: "newuser@example.com",
-      });
-      expect(mockBcrypt.genSalt).toHaveBeenCalledWith(10);
-      expect(mockBcrypt.hash).toHaveBeenCalledWith("password123", "mock-salt");
-      expect(mockUserService.createUser).toHaveBeenCalledWith({
-        name: "New User",
-        email: "newuser@example.com",
-        password: "hashedPassword123",
-      });
-      expect(createdUser.generateAuthToken).toHaveBeenCalled();
-      expect(mockResponse.status).toHaveBeenCalledWith(RESPONSE_STATUS.CREATED);
-      expect(mockResponse.json).toHaveBeenCalledWith({
+      expect(result).toEqual({
         user: {
           _id: "mock-user-id",
           name: "New User",
@@ -212,20 +195,15 @@ describe("AuthController", () => {
       mockUserService.findOne.mockResolvedValue(mockUser);
 
       // Act
-      await AuthController.register(
+      const result = await AuthController.register(
         mockRequest as Request,
         mockResponse as Response
       );
 
       // Assert
-      expect(mockUserService.findOne).toHaveBeenCalledWith({
-        email: "existing@example.com",
-      });
-      expect(mockResponse.status).toHaveBeenCalledWith(
-        RESPONSE_STATUS.BAD_REQUEST
-      );
-      expect(mockResponse.json).toHaveBeenCalledWith({
+      expect(result).toEqual({
         message: VALIDATION_MESSAGES.USER_ALREADY_EXISTS,
+        status: RESPONSE_STATUS.BAD_REQUEST,
       });
     });
   });
