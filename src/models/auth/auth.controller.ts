@@ -18,6 +18,7 @@ class AuthController {
     }
 
     const { password } = user.toObject();
+    console.log({ password });
 
     const isPasswordValid = await compare(data!.password, password);
 

@@ -3,7 +3,7 @@ import { VALIDATION_MESSAGES, RESPONSE_STATUS } from "@/constants";
 import { Blog } from "@/models/blog";
 import { IAuthenticatedRequest } from "@/interfaces";
 
-export const blogOwnershipMiddleware = async (
+export const protectUserMiddleware = async (
   req: IAuthenticatedRequest,
   res: Response,
   next: NextFunction
